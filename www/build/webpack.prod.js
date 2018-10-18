@@ -10,6 +10,7 @@ const base = require('./webpack.base')
 const pkg = require('../package')
 const _ = require('./utils')
 const config = require('./config')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 if (config.electron) {
   // remove dist folder in electron mode
@@ -18,7 +19,7 @@ if (config.electron) {
   // remove dist folder in web app mode
   exec('rm -rf dist/')
   // use source-map in web app mode
-  base.devtool = 'source-map'
+  base.devtool = 'cheap-module-source-map'
 }
 
 // use hash filename to support long-term caching
@@ -59,6 +60,11 @@ base.plugins.push(
     ServiceWorker: {
       events: true
     }
+  }),
+  new BundleAnalyzerPlugin({
+    analyzerMode: 'disable',
+    generateStatsFile: true,
+    statsOptions: { source: false }
   })
 )
 
